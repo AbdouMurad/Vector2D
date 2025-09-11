@@ -16,5 +16,10 @@ Entity class is first time I use the big 5:
     - Copy Constructor:
         List(const List &l);
 - Copy Assignment Operator
+    - Similar to copy constructor, instead of 
+    List l2 = l1; 
+    its
+    l2 = l1
+    - copy by val but same thing for addresses -> causes double free when destructed
 - Move Operations and RValues
 - Move and Copy Elision

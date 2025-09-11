@@ -19,6 +19,7 @@ class Entity {
     Entity(const Vector2 &v);
     Entity(const Entity &e);
 
+    Entity &operator=(const Entity &e);
     
 };
 

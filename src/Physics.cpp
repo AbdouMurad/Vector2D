@@ -1,42 +1,17 @@
 #include "Physics.h"
 
 
-Entity::~Entity() {
-    delete position;
-}
-Entity::Entity()
-    :   position(new Vector2()){}
-Entity::Entity(const Vector2 &v)
-    :   position(new Vector2(v)) {} 
-Entity::Entity(const Entity &e)
-    :   position(new Vector2(*e.position)), 
-        rotation(e.rotation) {}
-Entity::Entity(Entity &&e)
-    :   position(e.position), 
-        rotation(e.rotation) {
-    e.position = nullptr;
-}
-Entity &Entity::operator=(const Entity &e) {
-    if (this == &e) return *this;
-    delete position;
-    position = new Vector2(*e.position);
-    rotation = e.rotation;
-    return *this;
-}
-Entity &Entity::operator=(Entity &&e) {
-    std::swap(position, e.position); //the destructer of the r-value will be called after this -> we can give it data to clean up for us
-    rotation = e.rotation;
-    return *this;
-}
+Entity::Entity(const Vector2 pos) 
+    :   position(pos)
+    {}
 void Entity::setPosition(const Vector2 &v) {
-    delete position;
-    position = new Vector2(v);
+    position = v;
 }
 Vector2 Entity::getPosition() const{
-    return *position;
+    return position;
 }
 std::ostream &operator<<(std::ostream &out, const Entity &other) {
-    return out << "[Position: " << *other.position << "," << "Rotation: " << other.rotation << "]"; 
+    return out << "[Position: " << other.position << "," << "Rotation: " << other.rotation << "]"; 
 }
 
 //RigidBody - Class
@@ -52,67 +27,39 @@ void RigidBody::swap(RigidBody &rb) {
     std::swap(restitution, rb.restitution);
     std::swap(staticFriction, rb.staticFriction);
     std::swap(dynamicFriction, rb.dynamicFriction);
+    std::swap(collider, rb.collider);
 }
 
-RigidBody::~RigidBody() {
-    delete velocity;
-    delete acceleration;
-}
-//MOMENT OF INERTIA IS NOT ZERO, MUST CALCULATE FROM SHAPE
-RigidBody::RigidBody()
-    :   Entity(),
-        velocity(new Vector2()),
-        acceleration(new Vector2()) {}
-RigidBody::RigidBody(const Vector2 &p)
-    :   Entity(p),
-        velocity(new Vector2()),
-        acceleration(new Vector2()) {}
-RigidBody::RigidBody(const Vector2 &p, const Vector2 &v) 
-    :   Entity(p),
-        velocity(new Vector2(v)), 
-        acceleration(new Vector2()) {}
-RigidBody::RigidBody(const Vector2 &p, const Vector2 &v, const Vector2 &a)
-    :   Entity(p), 
-        velocity(new Vector2(v)), 
-        acceleration(new Vector2(a)) {}
+RigidBody::RigidBody(std::unique_ptr<Shape> col,            
+            const Vector2 &pos,
+            const Vector2 &vel,
+            const Vector2 &acc) 
+    :   Entity(pos),
+        velocity(vel),
+        acceleration(acc),
+        collider(std::move(col)) {}
 RigidBody::RigidBody(const Entity &e)
     :   Entity(e), 
-        velocity(new Vector2()), 
-        acceleration(new Vector2()) {}
+        velocity(Vector2()), 
+        acceleration(Vector2()) {}
 RigidBody::RigidBody(const RigidBody &rb)
-    :   Entity(*rb.position),
-        rotation(rb.rotation), 
-        velocity(new Vector2(*rb.velocity)), 
-        acceleration(new Vector(*rb.acceleration)), 
+    :   Entity(rb), 
+        velocity(Vector2(rb.velocity)), 
+        acceleration(Vector2(rb.acceleration)), 
         mass(rb.mass), 
         momentInertia(rb.momentInertia), 
         angularVelocity(rb.angularVelocity), 
         torque(rb.torque), 
         restitution(rb.restitution), 
         staticFriction(rb.staticFriction), 
-        dynamicFriction(rb.dynamicFriction) {}
-RigidBody::RigidBody(RigidBody &&rb) 
-    :   position(rb.position),
-        rotation(rb.rotation), 
-        velocity(rb.velocity), 
-        acceleration(rb.acceleration), 
-        mass(rb.mass), 
-        momentInertia(rb.momentInertia), 
-        angularVelocity(rb.angularVelocity), 
-        torque(rb.torque), restitution(rb.restitution), staticFriction(rb.staticFriction), dynamicFriction(rb.dynamicFriction) {
-    rb.position = nullptr;
-    rb.velocity = nullptr;
-    rb.acceleration = nullptr;
-}
+        dynamicFriction(rb.dynamicFriction),
+        collider(rb.collider ? rb.collider->clone() : nullptr) {}
 
 RigidBody &RigidBody::operator=(const RigidBody &rb){
     if (this == &rb) return *this;
-    delete position;
-    delete velocity;
-    delete acceleration;
-    position = new Vector2(*rb.position);
-    velocity = new Vector2(*rb.velocity);
-    acceleration = new Vector2(*rb.acceleration);
+    position = rb.position;
+    velocity = rb.velocity;
+    acceleration = rb.acceleration;
 
     mass = rb.mass;
     momentInertia = rb.momentInertia;
@@ -126,4 +73,85 @@ RigidBody &RigidBody::operator=(const RigidBody &rb){
 RigidBody &RigidBody::operator=(RigidBody &&rb) {
     swap(rb);
     return *this;
+}
+void RigidBody::setVelocity(const Vector2 &vector) {
+    velocity = vector;
+}
+Vector2 RigidBody::getVelocity() const {
+    return velocity;
+}
+void RigidBody::setAcceleration(const Vector2 &vector) {
+    acceleration = vector;
+}
+Vector2 RigidBody::getAcceleration() const {
+    return acceleration;
+}
+void RigidBody::setMass(float value) {
+    if (value > 0) {
+        mass = value;
+    }
+    else {
+        std::cerr << "ERROR: MASS SET BELOW ZERO" << std::endl;
+    }
+}
+float RigidBody::getMass() const {
+    return mass;
+}
+void RigidBody::setRestitution(float value) {
+    if (value >= 0 && value <= 1) {
+        restitution = value;
+    }
+    else
+    {
+        std::cerr << "ERROR: RIGIDBODY RESTITUTION OUTSIDE OF [0,1]" << std::endl;
+    }
+}
+float RigidBody::getRestitution() const {
+    return restitution;
+}
+void RigidBody::setSFriction(float value) {
+    if (value >= 0) {
+        staticFriction = value;
+    }
+    else {
+        std::cerr << "ERROR: STATIC FRICTION SET BELOW ZERO" << std::endl;
+    }
+}
+float RigidBody::getSFriction() const {
+    return staticFriction;
+}
+void RigidBody::setDFriction(float value) {
+    if (value >= 0) {
+        dynamicFriction = value;
+    }
+    else {
+        std::cerr << "ERROR: DYNAMIC FRICTION SET BELOW ZERO" << std::endl;
+    }
+}
+float RigidBody::getDFriction() const {
+    return dynamicFriction;
+}
+
+std::unique_ptr<Shape> Circle::clone() const {
+    return std::make_unique<Circle>(*this);
+}
+
+Circle::Circle()
+    :   radius(1.0) {}
+Circle::Circle(float r)
+    :   radius(r) {}
+
+float Circle::computeMomentInertia(float mass) const {
+    return 0.5f * mass * radius * radius;
+}
+float Circle::getRadius() const {
+    return radius;
+}
+void Circle::setRadius(float r) {
+    if (r > 0) {
+        radius = r;
+    }
+    else {
+        std::cerr << "ERROR: RADIUS SET LESS THAN OR EQUAL TO ZERO" << std::endl;
+    }
 }

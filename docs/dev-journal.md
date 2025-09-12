@@ -42,4 +42,10 @@ Entity class is first time I use the big 5:
 <h1>September 11:<h1>
 Finished up the big 5 on entity class. Started the rigidbody class, still deciding what should be included
     - Restitution: How 'bouncy' an object is, or how elastic. 0 -> inelastic, 1 -> elastic (no energy loss)
-    
+Realized that storing vectors in RigidBody using pointers was hindering performance, vector is not a big enough class that it can't be passed by value. Much faster to create onto stack
+    - Removal of this led to the removal of a lot of the code written for the big 5 -> feels like a step back but is a performance boost and better for safety
+Created Shape class, will act as parent class to multiple shapes. For now I think I will have rectangle and circle. 
+How this works is we can still attach each shape by the pointer of the parent class shape. This is because under the hood the memory still begins with the memory of shape, then it is extended by the child class. So you can think of this as Shape and Circle for example will both share the same address to the begining beacuse Circle is just an extension of shape.
+    - I want to give the user the option to create a rigid body without a collider, (might be useful to simulate singular points or what not).
+        - Tricky part is dealing with lifetime. If we create the shape in main funciton and attach then it doesn't belong to the rigid body and will delete once the stackframe on main closes. Solution to this is use unique_ptr
+            - Unique_ptr acts just like a ptr but with extra steps. It ensures that it only has one owner, (no move or copy constructor). No need for new or delete as it lives as long as stack frame does -> belongs to the lifespan of the rb object

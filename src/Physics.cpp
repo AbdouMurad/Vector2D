@@ -131,6 +131,16 @@ void RigidBody::setDFriction(float value) {
 float RigidBody::getDFriction() const {
     return dynamicFriction;
 }
+std::ostream &operator<<(std::ostream &out, const RigidBody &rb) {
+    return out << "[Position: " << rb.position << ", Velocity: " << rb.velocity << ", Acceleration: " << rb.acceleration << "," 
+    << std::endl << "Mass: " << rb.mass << ", Restitution: " << rb.restitution << ", Static Friction: " << rb.staticFriction << ", Dynamic Friction: " 
+    << rb.dynamicFriction <<  std::endl << "Moment of Inertia: " << rb.momentInertia << ", Angular Velocity: " << rb.angularVelocity << ", Torque: " << rb.torque << std::endl << *rb.collider << "]" << std::endl;  
+}
+
+std::ostream &operator<<(std::ostream &o, const Shape &shape){
+    shape.print(o);
+    return o;
+}
 
 std::unique_ptr<Shape> Circle::clone() const {
     return std::make_unique<Circle>(*this);
@@ -154,4 +164,10 @@ void Circle::setRadius(float r) {
     else {
         std::cerr << "ERROR: RADIUS SET LESS THAN OR EQUAL TO ZERO" << std::endl;
     }
+}
+void Circle::draw() {
+    std::cout << "Printing" << std::endl;
+}
+void Circle::print(std::ostream &o) const {
+    o << "{Shape : 'Circle', Radius: << " << radius << "}";
 }

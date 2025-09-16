@@ -11,8 +11,10 @@ class Shape {
     virtual float computeMomentInertia(float mass) const = 0;
     virtual void draw() = 0;
     virtual std::unique_ptr<Shape> clone() const = 0;
+    virtual void print(std::ostream &o) const = 0;
+    friend std::ostream &operator<<(std::ostream &out, const Shape shape);
 };
-
+std::ostream &operator<<(std::ostream &out, const Shape &shape);
 class Circle : public Shape {
     float radius;
     public:
@@ -22,9 +24,13 @@ class Circle : public Shape {
     float getRadius() const;
     void setRadius(float r);
     float computeMomentInertia(float mass) const override;
+    void draw() override;
+    void print(std::ostream &o) const override;
     Circle();
     Circle(float radius);
 };
+
+
 class Entity {
     friend std::ostream &operator<<(std::ostream &out, const Entity &e);
     
@@ -37,9 +43,6 @@ class Entity {
     Entity(const Vector2 position);
     void setPosition(const Vector2 &v);
     Vector2 getPosition() const;
-
-
-
 
 };
 std::ostream &operator<<(std::ostream &out, const Entity &e);

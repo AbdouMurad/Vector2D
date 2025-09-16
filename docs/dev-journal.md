@@ -49,3 +49,14 @@ How this works is we can still attach each shape by the pointer of the parent cl
     - I want to give the user the option to create a rigid body without a collider, (might be useful to simulate singular points or what not).
         - Tricky part is dealing with lifetime. If we create the shape in main funciton and attach then it doesn't belong to the rigid body and will delete once the stackframe on main closes. Solution to this is use unique_ptr
             - Unique_ptr acts just like a ptr but with extra steps. It ensures that it only has one owner, (no move or copy constructor). No need for new or delete as it lives as long as stack frame does -> belongs to the lifespan of the rb object
+
+<h1>September 15<h2>
+Created functionality to print rigid body (only works for circle colldier). I had to work backwords and create the overload 
+operators for the lowest classes first like the circle class. Interesting part is since the collider in the rigid body class is 
+defined as a unique pointer to a shape, it expects the operator that takes shape as a param. The work around this was create a 
+virtual function for the circle called print, which manipulated the stream opperand. This way we can overlaod the shape << operator
+and from within it call the ovveriden print function. 
+    - I still need to implement the functionality for rectangles
+    - Need to clean up my code, starting to look messy
+    - Need to figure out a consistent format for printing object attributes
+    - Implement the logic to update the moment of inertia after the collider is added

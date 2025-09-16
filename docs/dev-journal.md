@@ -1,6 +1,7 @@
-<h1>September 10:<h1>
+<h1>September 10:
+<h4>
 Began planning everything, idea is c++ backend and some sort of web app as a display.
-Writing a Vector library in order to refamiliarize myself with c++ basics
+Writing a Vector library in order to refamiliarize myself with c++ basics.
 
 Creating entity class, planning inheritance hierchy
 Entity -> RigidBody, RigidBody should have a shape as a component. 
@@ -39,24 +40,41 @@ Entity class is first time I use the big 5:
 - Move and Copy Elision
     - Look it up if needed -> compiler setting we can turn off
 
-<h1>September 11:<h1>
+<h1>September 11:
+<h4>
 Finished up the big 5 on entity class. Started the rigidbody class, still deciding what should be included
-    - Restitution: How 'bouncy' an object is, or how elastic. 0 -> inelastic, 1 -> elastic (no energy loss)
+
+- Restitution: How 'bouncy' an object is, or how elastic. 0 -> inelastic, 1 -> elastic (no energy loss)
 Realized that storing vectors in RigidBody using pointers was hindering performance, vector is not a big enough class that it can't be passed by value. Much faster to create onto stack
-    - Removal of this led to the removal of a lot of the code written for the big 5 -> feels like a step back but is a performance boost and better for safety
+- Removal of this led to the removal of a lot of the code written for the big 5 
+-> feels like a step back but is a performance boost and better for safety
+
 Created Shape class, will act as parent class to multiple shapes. For now I think I will have rectangle and circle. 
 How this works is we can still attach each shape by the pointer of the parent class shape. This is because under the hood the memory still begins with the memory of shape, then it is extended by the child class. So you can think of this as Shape and Circle for example will both share the same address to the begining beacuse Circle is just an extension of shape.
-    - I want to give the user the option to create a rigid body without a collider, (might be useful to simulate singular points or what not).
-        - Tricky part is dealing with lifetime. If we create the shape in main funciton and attach then it doesn't belong to the rigid body and will delete once the stackframe on main closes. Solution to this is use unique_ptr
-            - Unique_ptr acts just like a ptr but with extra steps. It ensures that it only has one owner, (no move or copy constructor). No need for new or delete as it lives as long as stack frame does -> belongs to the lifespan of the rb object
+- I want to give the user the option to create a rigid body without a collider, (might be useful to simulate singular points or what not).
+    - Tricky part is dealing with lifetime. If we create the shape in main funciton and attach then it doesn't belong to the rigid body and will delete once the stackframe on main closes. Solution to this is use unique_ptr
+        - Unique_ptr acts just like a ptr but with extra steps. It ensures that it only has one owner, (no move or copy constructor). No need for new or delete as it lives as long as stack frame does -> belongs to the lifespan of the rb object
 
-<h1>September 15<h2>
-Created functionality to print rigid body (only works for circle colldier). I had to work backwords and create the overload 
-operators for the lowest classes first like the circle class. Interesting part is since the collider in the rigid body class is 
-defined as a unique pointer to a shape, it expects the operator that takes shape as a param. The work around this was create a 
-virtual function for the circle called print, which manipulated the stream opperand. This way we can overlaod the shape << operator
-and from within it call the ovveriden print function. 
-    - I still need to implement the functionality for rectangles
-    - Need to clean up my code, starting to look messy
-    - Need to figure out a consistent format for printing object attributes
-    - Implement the logic to update the moment of inertia after the collider is added
+<h1>September 15
+<h4>
+Created functionality to print rigid body (only works for circle colldier). I had to work backwords and create the overload operators for the lowest classes first like the circle class. 
+
+Interesting part is since the collider in the rigid body class is 
+defined as a unique pointer to a shape, it expects the operator that takes shape as a param. The work around this was create a virtual function for the circle called print, which manipulated the stream opperand. 
+
+This way we can overlaod the shape << operator and from within it call the ovveriden print function. 
+- I still need to implement the functionality for rectangles
+- Need to clean up my code, starting to look messy
+- Need to figure out a consistent format for printing object attributes
+- Implement the logic to update the moment of inertia after the collider is added
+
+<h1> September 16
+<h4>
+Finished up the << operator for printing the rigidbody object. 
+Along with that I implemented the Rectangle shape class.
+
+I also created a set collider method so the user has the option to create a rigidbody without a collider to begin with. Along with that I now call the compute moment of inertia method whenever a  collider is attached. 
+
+To Do:
+- Research the next step -> am I ready to apply forces?
+- Look over collision algorithm from archived project -> how would shapes of different types interact? ex. Circle colliding with a rectangle.

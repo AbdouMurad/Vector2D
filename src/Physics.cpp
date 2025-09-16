@@ -37,7 +37,19 @@ RigidBody::RigidBody(std::unique_ptr<Shape> col,
     :   Entity(pos),
         velocity(vel),
         acceleration(acc),
-        collider(std::move(col)) {}
+        collider(std::move(col)) {
+            if (collider) {
+                momentInertia = collider->computeMomentInertia(mass);
+            }
+        }
+RigidBody::RigidBody(            
+            const Vector2 &pos,
+            const Vector2 &vel,
+            const Vector2 &acc) 
+    :   Entity(pos),
+        velocity(vel),
+        acceleration(acc),
+        collider(nullptr) {}
 RigidBody::RigidBody(const Entity &e)
     :   Entity(e), 
         velocity(Vector2()), 
@@ -54,7 +66,6 @@ RigidBody::RigidBody(const RigidBody &rb)
         staticFriction(rb.staticFriction), 
         dynamicFriction(rb.dynamicFriction),
         collider(rb.collider ? rb.collider->clone() : nullptr) {}
-
 RigidBody &RigidBody::operator=(const RigidBody &rb){
     if (this == &rb) return *this;
     position = rb.position;
@@ -131,10 +142,30 @@ void RigidBody::setDFriction(float value) {
 float RigidBody::getDFriction() const {
     return dynamicFriction;
 }
+void RigidBody::setCollider(std::unique_ptr<Shape> col) {
+    collider = std::move(col);
+    momentInertia = collider->computeMomentInertia(mass);
+}
 std::ostream &operator<<(std::ostream &out, const RigidBody &rb) {
-    return out << "[Position: " << rb.position << ", Velocity: " << rb.velocity << ", Acceleration: " << rb.acceleration << "," 
-    << std::endl << "Mass: " << rb.mass << ", Restitution: " << rb.restitution << ", Static Friction: " << rb.staticFriction << ", Dynamic Friction: " 
-    << rb.dynamicFriction <<  std::endl << "Moment of Inertia: " << rb.momentInertia << ", Angular Velocity: " << rb.angularVelocity << ", Torque: " << rb.torque << std::endl << *rb.collider << "]" << std::endl;  
+    out << "RigidBody : {\n"
+    << "        Position: " << rb.position << ",\n"
+    << "        Velocity: " << rb.velocity << ",\n"
+    << "        Acceleration: " << rb.acceleration << ",\n" 
+    << "        Mass: " << rb.mass << ",\n"
+    << "        Restitution: " << rb.restitution << ",\n"
+    << "        Static Friction: " << rb.staticFriction << ",\n"
+    << "        Dynamic Friction: " << rb.dynamicFriction << ",\n"
+    << "        Moment of Inertia: " << rb.momentInertia << ",\n"
+    << "        Angular Velocity: " << rb.angularVelocity << ",\n"
+    << "        Torque: " << rb.torque << ",\n"
+    << "        Collider: ";
+    if (rb.collider) {
+        out << *rb.collider;
+    }
+    else {
+        out << "{NONE}";
+    }
+    return out << "\n}" << std::endl;
 }
 
 std::ostream &operator<<(std::ostream &o, const Shape &shape){
@@ -165,9 +196,50 @@ void Circle::setRadius(float r) {
         std::cerr << "ERROR: RADIUS SET LESS THAN OR EQUAL TO ZERO" << std::endl;
     }
 }
-void Circle::draw() {
-    std::cout << "Printing" << std::endl;
+void Circle::draw() const {
+    std::cout << "Drawing Circle..." << std::endl;
 }
 void Circle::print(std::ostream &o) const {
-    o << "{Shape : 'Circle', Radius: << " << radius << "}";
+    o << "{Shape : 'Circle', Radius: " << radius << "}";
+}
+
+std::unique_ptr<Shape> Rectangle::clone() const {
+    return std::make_unique<Rectangle>(*this);
+}
+Rectangle::Rectangle()
+    :   width(1),
+        height(1) {}
+Rectangle::Rectangle(float w, float h)
+    :   width(w),
+        height(h) {}
+float Rectangle::computeMomentInertia(float mass) const {
+    return mass * (width * width + height * height) /12;
+}
+float Rectangle::getWidth() const {
+    return width;
+}
+float Rectangle::getHeight() const {
+    return height;
+}
+void Rectangle::setWidth(float w) {
+    if (w > 0) {
+        width = w;
+    }
+    else {
+        std::cerr << "ERROR: WIDTH SET LESS THAN OR EQUAL TO ZERO" << std::endl;
+    }
+} 
+void Rectangle::setHeight(float h) {
+    if (h > 0) {
+        height = h;
+    }
+    else {
+        std::cerr << "ERROR: HEIGHT SET LESS THAN OR EQUAL TO ZERO" << std::endl;
+    }
+}
+void Rectangle::draw() const {
+    std::cout << "Printing Rectangle..." << std::endl;
+}
+void Rectangle::print(std::ostream &out) const {
+    out << "{Shape: 'Rectangle', Height: " << height << ", Width: " << width << "}";
 }

@@ -9,12 +9,13 @@ class Shape {
     public:
     virtual ~Shape() = default;
     virtual float computeMomentInertia(float mass) const = 0;
-    virtual void draw() = 0;
+    virtual void draw() const = 0;
     virtual std::unique_ptr<Shape> clone() const = 0;
     virtual void print(std::ostream &o) const = 0;
     friend std::ostream &operator<<(std::ostream &out, const Shape shape);
 };
 std::ostream &operator<<(std::ostream &out, const Shape &shape);
+
 class Circle : public Shape {
     float radius;
     public:
@@ -24,12 +25,27 @@ class Circle : public Shape {
     float getRadius() const;
     void setRadius(float r);
     float computeMomentInertia(float mass) const override;
-    void draw() override;
+    void draw() const override;
     void print(std::ostream &o) const override;
     Circle();
     Circle(float radius);
 };
 
+class Rectangle : public Shape {
+    float width, height;
+    public: 
+
+    std::unique_ptr<Shape> clone() const override;
+    float getWidth() const;
+    float getHeight() const;
+    void setWidth(float w);
+    void setHeight(float h);
+    float computeMomentInertia(float mass) const override;
+    void draw() const override;
+    void print(std::ostream &o) const override;
+    Rectangle();
+    Rectangle(float w, float h);
+};
 
 class Entity {
     friend std::ostream &operator<<(std::ostream &out, const Entity &e);
@@ -87,11 +103,16 @@ class RigidBody : public Entity {
     void setDFriction(float d);
     float getDFriction() const;
 
+    void setCollider(std::unique_ptr<Shape> collider);
 
     RigidBody(std::unique_ptr<Shape> col = nullptr, 
             const Vector2 &pos = Vector2(0,0),
             const Vector2 &vel = Vector2(0,0),
             const Vector2 &acc = Vector2(0,0));
+    RigidBody( 
+        const Vector2 &pos = Vector2(0,0),
+        const Vector2 &vel = Vector2(0,0),
+        const Vector2 &acc = Vector2(0,0));
     RigidBody(const Entity &e);
     RigidBody(const RigidBody &rb);
     RigidBody(RigidBody &&rb);

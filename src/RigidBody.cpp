@@ -1,5 +1,4 @@
-#include "Physics.h"
-
+#include "RigidBody.h"
 
 Entity::Entity(const Vector2 pos) 
     :   position(pos)
@@ -100,6 +99,7 @@ Vector2 RigidBody::getAcceleration() const {
 void RigidBody::setMass(float value) {
     if (value > 0) {
         mass = value;
+        recomputeInertia();
     }
     else {
         std::cerr << "ERROR: MASS SET BELOW ZERO" << std::endl;
@@ -142,9 +142,14 @@ void RigidBody::setDFriction(float value) {
 float RigidBody::getDFriction() const {
     return dynamicFriction;
 }
+void RigidBody::recomputeInertia() {
+    if (collider) {
+        momentInertia = collider->computeMomentInertia(mass);
+    }
+}
 void RigidBody::setCollider(std::unique_ptr<Shape> col) {
     collider = std::move(col);
-    momentInertia = collider->computeMomentInertia(mass);
+    recomputeInertia();
 }
 std::ostream &operator<<(std::ostream &out, const RigidBody &rb) {
     out << "RigidBody : {\n"

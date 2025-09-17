@@ -41,3 +41,4 @@ float Vector2::dot(const Vector2 &other) const {
 std::ostream &operator<<(std::ostream &out, const Vector2 &other) {
     return out << "(" << other.x << "," << other.y << ")"; 
 }
+

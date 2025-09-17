@@ -1,19 +1,10 @@
 #include "Utilities.h"
-#include "Physics.h"
+#include "RigidBody.h"
 #include <iostream>
 
 int main() {
-    auto circCollider = std::make_unique<Rectangle>();
-    RigidBody rb(
-        //std::move(circCollider),
-        Vector2(0,0),
-        Vector2(1,0),
-        Vector2()
-    );
-    rb.setRestitution(1);
-    std::cout << rb;
+    std::vector<std::unique_ptr<RigidBody>> array;
+    array.push_back(std::make_unique<RigidBody>(std::make_unique<Circle>()));
 
-    rb.setCollider(std::move(circCollider));
-    std::cout << rb;
-
+    std::cout << *array[0] << std::endl;
 }

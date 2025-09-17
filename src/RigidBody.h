@@ -104,8 +104,8 @@ class RigidBody : public Entity {
     float getDFriction() const;
 
     void setCollider(std::unique_ptr<Shape> collider);
-
-    RigidBody(std::unique_ptr<Shape> col = nullptr, 
+    void recomputeInertia();
+    RigidBody(std::unique_ptr<Shape> col, 
             const Vector2 &pos = Vector2(0,0),
             const Vector2 &vel = Vector2(0,0),
             const Vector2 &acc = Vector2(0,0));

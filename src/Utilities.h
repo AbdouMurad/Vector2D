@@ -1,6 +1,7 @@
 #pragma once
 #include <cmath>
 #include <iostream>
+#include <vector>
 
 struct Vector2 {
     float x, y;

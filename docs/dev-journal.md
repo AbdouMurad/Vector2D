@@ -78,3 +78,8 @@ I also created a set collider method so the user has the option to create a rigi
 To Do:
 - Research the next step -> am I ready to apply forces?
 - Look over collision algorithm from archived project -> how would shapes of different types interact? ex. Circle colliding with a rectangle.
+
+Started the physcis manager script which includes the world class which will hold all objects and forces.
+
+Researched how to implement time -> using chrono library
+Implemented Vector library instead of custom list class -> much more optimized 

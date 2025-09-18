@@ -83,3 +83,23 @@ Started the physcis manager script which includes the world class which will hol
 
 Researched how to implement time -> using chrono library
 Implemented Vector library instead of custom list class -> much more optimized 
+
+<h1>September 17
+<h4>
+1 Week MARK!
+
+
+Created the update loop, every time the duration passes the dt set, we call the update function in the World class. Setup a start function as well thats called once. Just like how Unity and UE work. 
+
+Implemented globalAccelration -> better than globalForce because if we look at gravity as an example every body has its own force but they share an accelration.
+Rigidbodies now have a forces vector which tracks what forces are being applied at every frame. 
+- Frame Begins -> forces = 0
+- Apply global accelerations to forces
+- Apply any seperate forces acting on object
+- Call integrate function -> converts forces to acceleration -> integrates acceleration into velocity and velocity into position based on dt.
+- Set forces = 0, repeat
+
+TODO:
+- Watch The Cherno series on making a game enigne
+- Start looking over collision algorithms
+- Code still needs cleaning up -> Will have a hard time reading it a month from now

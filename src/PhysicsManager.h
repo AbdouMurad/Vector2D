@@ -8,7 +8,7 @@ extern int FRAMES;
 class World {
     float dt = 1.0/FRAMES;    
     std::vector<std::unique_ptr<RigidBody>> rigidBodies;
-    std::vector<Vector2> globalForces;
+    std::vector<Vector2> globalAcceleration; //forces like gravity
 
     public:
     float getDt() const;

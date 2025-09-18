@@ -19,6 +19,7 @@ void RigidBody::swap(RigidBody &rb) {
     std::swap(rotation, rb.rotation);
     std::swap(velocity, rb.velocity);
     std::swap(acceleration, rb.acceleration);
+    std::swap(forces, rb.forces);
     std::swap(mass, rb.mass);
     std::swap(momentInertia, rb.momentInertia);
     std::swap(angularVelocity, rb.angularVelocity);
@@ -32,10 +33,12 @@ void RigidBody::swap(RigidBody &rb) {
 RigidBody::RigidBody(std::unique_ptr<Shape> col,            
             const Vector2 &pos,
             const Vector2 &vel,
-            const Vector2 &acc) 
+            const Vector2 &acc,
+            const Vector2 &force) 
     :   Entity(pos),
         velocity(vel),
         acceleration(acc),
+        forces(force),
         collider(std::move(col)) {
             if (collider) {
                 momentInertia = collider->computeMomentInertia(mass);
@@ -44,19 +47,23 @@ RigidBody::RigidBody(std::unique_ptr<Shape> col,
 RigidBody::RigidBody(            
             const Vector2 &pos,
             const Vector2 &vel,
-            const Vector2 &acc) 
+            const Vector2 &acc,
+            const Vector2 &force) 
     :   Entity(pos),
         velocity(vel),
         acceleration(acc),
+        forces(force),
         collider(nullptr) {}
 RigidBody::RigidBody(const Entity &e)
     :   Entity(e), 
         velocity(Vector2()), 
-        acceleration(Vector2()) {}
+        acceleration(Vector2()),
+        forces(Vector2()) {}
 RigidBody::RigidBody(const RigidBody &rb)
     :   Entity(rb), 
         velocity(Vector2(rb.velocity)), 
-        acceleration(Vector2(rb.acceleration)), 
+        acceleration(Vector2(rb.acceleration)),
+        forces(Vector2(rb.forces)), 
         mass(rb.mass), 
         momentInertia(rb.momentInertia), 
         angularVelocity(rb.angularVelocity), 
@@ -70,6 +77,7 @@ RigidBody &RigidBody::operator=(const RigidBody &rb){
     position = rb.position;
     velocity = rb.velocity;
     acceleration = rb.acceleration;
+    forces = rb.forces;
 
     mass = rb.mass;
     momentInertia = rb.momentInertia;
@@ -151,9 +159,14 @@ void RigidBody::setCollider(std::unique_ptr<Shape> col) {
     collider = std::move(col);
     recomputeInertia();
 }
+void RigidBody::applyForce(const Vector2 &force) {
+    forces += force;
+}
 void RigidBody::integrate(float dt) {
+    acceleration = forces/mass;
     velocity += acceleration * dt;
     position += velocity *dt;
+    forces = Vector2();
 }
 
 std::ostream &operator<<(std::ostream &out, const RigidBody &rb) {

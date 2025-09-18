@@ -71,6 +71,7 @@ class RigidBody : public Entity {
     protected:
     Vector2 velocity;
     Vector2 acceleration;
+    Vector2 forces;
 
     float mass = 1.0f;
     float restitution = 1.0f;
@@ -107,17 +108,21 @@ class RigidBody : public Entity {
     void setCollider(std::unique_ptr<Shape> collider);
     void recomputeInertia();
 
+    void applyForce(const Vector2 &force);
     void integrate(float dt);
 
 
     RigidBody(std::unique_ptr<Shape> col, 
             const Vector2 &pos = Vector2(0,0),
             const Vector2 &vel = Vector2(0,0),
-            const Vector2 &acc = Vector2(0,0));
+            const Vector2 &acc = Vector2(0,0),
+            const Vector2 &force = Vector2(0,0)
+        );
     RigidBody( 
         const Vector2 &pos = Vector2(0,0),
         const Vector2 &vel = Vector2(0,0),
-        const Vector2 &acc = Vector2(0,0));
+        const Vector2 &acc = Vector2(0,0),
+        const Vector2 &force = Vector2(0,0));
     RigidBody(const Entity &e);
     RigidBody(const RigidBody &rb);
     RigidBody(RigidBody &&rb);

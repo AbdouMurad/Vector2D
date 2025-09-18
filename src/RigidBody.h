@@ -80,6 +80,7 @@ class RigidBody : public Entity {
     std::unique_ptr<Shape> collider; //unique pointer -> rb owns collider, when rb dies collider dies. Cannot transfer ownser ship (no copy constructor)
 
     public:
+    
 
     float momentInertia = 0.0f;
     float angularVelocity = 0.0f;
@@ -105,6 +106,10 @@ class RigidBody : public Entity {
 
     void setCollider(std::unique_ptr<Shape> collider);
     void recomputeInertia();
+
+    void integrate(float dt);
+
+
     RigidBody(std::unique_ptr<Shape> col, 
             const Vector2 &pos = Vector2(0,0),
             const Vector2 &vel = Vector2(0,0),

@@ -1,10 +1,22 @@
 #include "Utilities.h"
+#include "PhysicsManager.h"
 #include "RigidBody.h"
 #include <iostream>
 
-int main() {
-    std::vector<std::unique_ptr<RigidBody>> array;
-    array.push_back(std::make_unique<RigidBody>(std::make_unique<Circle>()));
 
-    std::cout << *array[0] << std::endl;
+int main() {
+    World world;
+    //game loop
+    auto start = std::chrono::high_resolution_clock::now();
+
+    world.start();
+    Timer timer; 
+    while (true) {
+        auto end = std::chrono::high_resolution_clock::now();
+        std::chrono::duration<float> duration = end - start;
+        if (duration.count() >= world.getDt()) {
+            world.update();
+            start = end;
+        }
+    }
 }

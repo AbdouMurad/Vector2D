@@ -151,6 +151,11 @@ void RigidBody::setCollider(std::unique_ptr<Shape> col) {
     collider = std::move(col);
     recomputeInertia();
 }
+void RigidBody::integrate(float dt) {
+    velocity += acceleration * dt;
+    position += velocity *dt;
+}
+
 std::ostream &operator<<(std::ostream &out, const RigidBody &rb) {
     out << "RigidBody : {\n"
     << "        Position: " << rb.position << ",\n"

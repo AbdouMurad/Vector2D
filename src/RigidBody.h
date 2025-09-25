@@ -12,6 +12,7 @@ class Shape {
     virtual void draw() const = 0;
     virtual std::unique_ptr<Shape> clone() const = 0;
     virtual void print(std::ostream &o) const = 0;
+    virtual float getSize() const = 0; //return the largest sidelength/radius
     friend std::ostream &operator<<(std::ostream &out, const Shape shape);
 };
 std::ostream &operator<<(std::ostream &out, const Shape &shape);
@@ -27,6 +28,7 @@ class Circle : public Shape {
     float computeMomentInertia(float mass) const override;
     void draw() const override;
     void print(std::ostream &o) const override;
+    float getSize() const override;
     Circle();
     Circle(float radius);
 };
@@ -43,6 +45,7 @@ class Rectangle : public Shape {
     float computeMomentInertia(float mass) const override;
     void draw() const override;
     void print(std::ostream &o) const override;
+    float getSize() const override;
     Rectangle();
     Rectangle(float w, float h);
 };
@@ -111,7 +114,10 @@ class RigidBody : public Entity {
     void applyForce(const Vector2 &force);
     void integrate(float dt);
 
+    bool hasCollider() const;
 
+    float getSize() const;
+    
     RigidBody(std::unique_ptr<Shape> col, 
             const Vector2 &pos = Vector2(0,0),
             const Vector2 &vel = Vector2(0,0),

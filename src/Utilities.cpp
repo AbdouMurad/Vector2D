@@ -48,3 +48,9 @@ std::ostream &operator<<(std::ostream &out, const Vector2 &other) {
     return out << "(" << other.x << "," << other.y << ")"; 
 }
 
+float max(float a, float b) {
+    return a > b ? a : b;
+}
+int max(int a, int b) {
+    return a > b ? a : b;
+}

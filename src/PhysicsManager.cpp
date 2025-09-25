@@ -6,10 +6,14 @@ int FRAMES = 120;
 int FRAMES = 60;
 #endif
 
-void World::start() {
-    rigidBodies.push_back(std::make_unique<RigidBody>(Vector2(0,100),Vector2(0,0),Vector2(0,0)));
-    globalAcceleration.push_back(Vector2(0,-9.81)); //gravity
 
+
+void World::start() {
+    //rigidBodies.push_back(std::make_unique<RigidBody>(std::make_unique<Circle>(),Vector2(0,100),Vector2(0,0),Vector2(0,0))); 
+    rigidBodies.push_back(std::make_unique<RigidBody>(Vector2(0,100),Vector2(0,0),Vector2(0,0))); 
+    globalAcceleration.push_back(Vector2(0,-9.81)); //gravity
+    //searchLargestDimension();
+    //std::cout << largestDimension << std::endl;
 }
 
 void World::update() {
@@ -19,7 +23,11 @@ void World::update() {
         std::cout << *rigidBodies[i] << std::endl;
     }
 }
-
+void World::searchLargestDimension() {
+    for (int i = 0; i < rigidBodies.size(); ++i) {
+        largestDimension = max(largestDimension, rigidBodies[i]->getSize());
+    }
+} 
 float World::getDt () const {
     return dt;
 }

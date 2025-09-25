@@ -40,3 +40,5 @@ struct Vector2 {
 
 std::ostream &operator<<(std::ostream &out, const Vector2 &other);
 
+float max(float,float);
+int max(int,int);

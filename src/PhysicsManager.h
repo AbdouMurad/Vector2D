@@ -6,10 +6,11 @@
 extern int FRAMES;
 
 class World {
-    float dt = 1.0/FRAMES;    
+    float largestDimension = 0;
+    float dt = 1/FRAMES;  
     std::vector<std::unique_ptr<RigidBody>> rigidBodies;
     std::vector<Vector2> globalAcceleration; //forces like gravity
-
+    void searchLargestDimension();
     public:
     float getDt() const;
     void update(); //constantly called

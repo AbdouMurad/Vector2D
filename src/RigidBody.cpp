@@ -168,7 +168,17 @@ void RigidBody::integrate(float dt) {
     position += velocity *dt;
     forces = Vector2();
 }
-
+bool RigidBody::hasCollider() const {
+    return collider ? true : false;
+}
+float RigidBody::getSize() const {
+    if (collider) {
+        return collider->getSize();
+    }
+    else {
+        return 0;
+    }
+}
 std::ostream &operator<<(std::ostream &out, const RigidBody &rb) {
     out << "RigidBody : {\n"
     << "        Position: " << rb.position << ",\n"
@@ -225,7 +235,9 @@ void Circle::draw() const {
 void Circle::print(std::ostream &o) const {
     o << "{Shape : 'Circle', Radius: " << radius << "}";
 }
-
+float Circle::getSize() const {
+    return radius;
+}
 std::unique_ptr<Shape> Rectangle::clone() const {
     return std::make_unique<Rectangle>(*this);
 }
@@ -265,4 +277,7 @@ void Rectangle::draw() const {
 }
 void Rectangle::print(std::ostream &out) const {
     out << "{Shape: 'Rectangle', Height: " << height << ", Width: " << width << "}";
+}
+float Rectangle::getSize() const {
+    return max(width, height);
 }

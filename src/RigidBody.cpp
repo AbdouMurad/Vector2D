@@ -179,6 +179,10 @@ float RigidBody::getSize() const {
         return 0;
     }
 }
+Shape *RigidBody::getCollider() const {
+    return collider.get();
+}
+
 std::ostream &operator<<(std::ostream &out, const RigidBody &rb) {
     out << "RigidBody : {\n"
     << "        Position: " << rb.position << ",\n"

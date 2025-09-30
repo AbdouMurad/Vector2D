@@ -18,3 +18,5 @@ class World {
 
     
 };
+
+bool checkSAT(const RigidBody &, const RigidBody &);

@@ -85,7 +85,7 @@ class RigidBody : public Entity {
 
     public:
     
-
+    
     float momentInertia = 0.0f;
     float angularVelocity = 0.0f;
     float torque = 0.0f;
@@ -118,6 +118,8 @@ class RigidBody : public Entity {
 
     float getSize() const;
     
+    Shape *getCollider() const;
+
     RigidBody(std::unique_ptr<Shape> col, 
             const Vector2 &pos = Vector2(0,0),
             const Vector2 &vel = Vector2(0,0),

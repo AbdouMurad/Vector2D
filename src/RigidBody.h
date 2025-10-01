@@ -55,9 +55,11 @@ class Entity {
     
     protected:
     Vector2 position;
+    double rotation = 0.0f;
 
     public:
-    float rotation = 0.0f;
+    double getRotation() const;
+    void setRotation(double r);
     
     Entity(const Vector2 position);
     void setPosition(const Vector2 &v);

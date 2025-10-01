@@ -103,3 +103,19 @@ TODO:
 - Watch The Cherno series on making a game enigne
 - Start looking over collision algorithms
 - Code still needs cleaning up -> Will have a hard time reading it a month from now
+
+
+<h1>September 30
+<h4>
+Source for seperate axis theorem: https://www.youtube.com/watch?v=dn0hUgsok9M
+
+How the seperate axis theorem works is we look at the line that 2 points make for each shape (a rectangle has 4 different axis to check) -> project each corner onto the line of both shape and see if there is a overlap
+
+- Implemented SAT for rectangle x rectangle
+<h4>
+SAT works by projecting corners of the object onto an axis and then we can easily look at the overlap to determine if there is a possible collision or not
+<h4>
+- If atleast 1 axis shows that there is no collision then the objects are apart and not colliding
+
+TODO:
+    Implement logic for circle x rectangle (circle x circle already done - very simple)

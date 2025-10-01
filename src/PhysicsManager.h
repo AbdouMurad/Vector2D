@@ -7,7 +7,7 @@ extern int FRAMES;
 
 class World {
     float largestDimension = 0;
-    float dt = 1/FRAMES;  
+    float dt = 1.0/FRAMES;  
     std::vector<std::unique_ptr<RigidBody>> rigidBodies;
     std::vector<Vector2> globalAcceleration; //forces like gravity
     void searchLargestDimension();
@@ -20,3 +20,6 @@ class World {
 };
 
 bool checkSAT(const RigidBody &, const RigidBody &);
+
+bool CCSAT(const RigidBody &, const Circle *, const RigidBody &, const Circle *);
+bool RRSAT(const RigidBody &, const Rectangle *, const RigidBody &, const Rectangle *);

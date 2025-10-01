@@ -7,10 +7,10 @@
 int main() {
     World world;
     //game loop
-    auto start = std::chrono::high_resolution_clock::now();
 
+    auto start = std::chrono::high_resolution_clock::now();
     world.start();
-    Timer timer; 
+    
     while (true) {
         auto end = std::chrono::high_resolution_clock::now();
         std::chrono::duration<float> duration = end - start;

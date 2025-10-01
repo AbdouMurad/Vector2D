@@ -9,6 +9,18 @@ void Entity::setPosition(const Vector2 &v) {
 Vector2 Entity::getPosition() const{
     return position;
 }
+double Entity::getRotation() const {
+    return rotation;
+}
+void Entity::setRotation(double r) {
+    if (r > PI) {
+        r -= 2*PI * ceil(r/(2*PI));
+    }
+    else if (r < PI) {
+        r -= 2*PI*floor(r/(2*PI));
+    }
+    rotation = r;
+}
 std::ostream &operator<<(std::ostream &out, const Entity &other) {
     return out << "[Position: " << other.position << "," << "Rotation: " << other.rotation << "]"; 
 }
@@ -185,7 +197,7 @@ Shape *RigidBody::getCollider() const {
 
 std::ostream &operator<<(std::ostream &out, const RigidBody &rb) {
     out << "RigidBody : {\n"
-    << "        Position: " << rb.position << ",\n"
+    << "        [Position: " << rb.position << "," << "Rotation: " << rb.rotation << "],\n"
     << "        Velocity: " << rb.velocity << ",\n"
     << "        Acceleration: " << rb.acceleration << ",\n" 
     << "        Mass: " << rb.mass << ",\n"

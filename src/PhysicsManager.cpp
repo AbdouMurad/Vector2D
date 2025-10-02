@@ -18,7 +18,8 @@ void World::start() {
     //std::cout << largestDimension << std::endl;
     {
         Timer timer;
-        std::cout << "COLLIDING: " << checkSAT(*rigidBodies[0], *rigidBodies[1]) << std::endl;
+        int col = checkSAT(*rigidBodies[0], *rigidBodies[1]);
+        std::cout << "COLLIDING: " << col << std::endl;
     }
 }
 
@@ -62,7 +63,6 @@ bool checkSAT(const RigidBody &rb1, const RigidBody &rb2) {
 bool CCSAT(const RigidBody &rb1, const Circle *c1, const RigidBody &rb2, const Circle *c2) {
     float d = distance(rb1.getPosition(), rb2.getPosition());
     return (c1->getRadius() + c2->getRadius()) < d ? false : true;
-
 }
 bool checkAxisRR(const Vector2 *corners1, const Vector2 *corners2, const Vector2 &axis) {
     float r1_min = projectLength(axis, corners1[0]);
@@ -118,9 +118,9 @@ bool RCSAT(const RigidBody &rb1, const Rectangle *r, const RigidBody &rb2, const
     Vector2 oldPosR = rb1.getPosition();
 
     Vector2 newPosC =oldPosC - oldPosR; //position of circle with respect to triangle (rotated)
-    newPosC = Vector2(newPosC.x * cos(-rotation) - newPosC.y * sin(-rotation), newPosC.x * cos(-rotation) + newPosC.y * cos(-rotation)); //position of circle with respect to traingle (unrotated)
-    point = Vector2(clamp(newPosC.x, -r->getWidth()/2, r->getWidth()/2), clamp(newPosC.y, -r->getHeight()/2, r->getHeight())); //location of point with respect to rectangle (unrotated)
-    point = Vector2(point.x * cos(rotation) - point.y * sin(rotation) + oldPosR.x, point.x * sin(rotation) + point.y * cos(rotation) + oldPosR.y); //location of point with respect to world
+    newPosC = Vector2(newPosC.x * cos(-rotation) - newPosC.y * sin(-rotation), newPosC.x * sin(-rotation) + newPosC.y * cos(-rotation)); //position of circle with respect to traingle (unrotated)
+    point = Vector2(clamp(newPosC.x, -r->getWidth()/2, r->getWidth()/2), clamp(newPosC.y, -r->getHeight()/2, r->getHeight()/2)); //location of point with respect to rectangle (unrotated)
+    point = Vector2(point.x * cos(rotation) - point.y * sin(rotation), point.x * sin(rotation) + point.y * cos(rotation)) + oldPosR; //location of point with respect to world
     if (!checkAxisRC(corners, oldPosC, c->getRadius(), corners[0] - corners[1])) return false;
     if (!checkAxisRC(corners, oldPosC, c->getRadius(), corners[0] - corners[3])) return false;
     if (!checkAxisRC(corners, oldPosC, c->getRadius(), point - oldPosC)) return false;

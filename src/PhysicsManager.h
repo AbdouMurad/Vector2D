@@ -20,6 +20,6 @@ class World {
 };
 
 bool checkSAT(const RigidBody &, const RigidBody &);
-
+bool RCSAT(const RigidBody &rb1, const Rectangle *r, const RigidBody &rb2, const Circle *c);
 bool CCSAT(const RigidBody &, const Circle *, const RigidBody &, const Circle *);
 bool RRSAT(const RigidBody &, const Rectangle *, const RigidBody &, const Rectangle *);

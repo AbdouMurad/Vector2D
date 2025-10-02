@@ -53,3 +53,4 @@ int max(int, int);
 float min(float,float);
 int min(int, int);
 float abs(float);
+float clamp(float val, float min, float max);

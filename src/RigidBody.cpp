@@ -227,7 +227,7 @@ std::unique_ptr<Shape> Circle::clone() const {
 }
 
 Circle::Circle()
-    :   radius(1.0) {}
+    :   radius(0.5) {}
 Circle::Circle(float r)
     :   radius(r) {}
 

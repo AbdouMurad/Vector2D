@@ -85,4 +85,8 @@ int min(int a, int b) {
 float abs(float v) {
     return v >= 0 ? v : -v;
 }
-
+float clamp(float val, float min, float max) {
+    if (val < min) return min;
+    if (val > max) return max;
+    return val;
+}

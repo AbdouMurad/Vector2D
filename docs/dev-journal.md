@@ -119,3 +119,16 @@ SAT works by projecting corners of the object onto an axis and then we can easil
 
 TODO:
     Implement logic for circle x rectangle (circle x circle already done - very simple)
+
+<h1>October 1
+<h4>
+Implemented logic for circle x rectangle - a bit more difficult
+
+The same exact process but with axis from rectangle plus an extra axis from circle to point on rectangle closest to circle
+ - This point is found by clamping the coords of the circle with rect +- the half width/height
+ - For rotated rects its a bit harder -> find location of circle with respect to rect -> rotate coords so its on the same axis as rect -> find point -> unrotate point
+
+TODO: 
+ - Further test with Unity 2D world -> create a circle and a rect and see result of collision detection
+ - Find out how to deal with collisions. Do I have to push the pieces apart? how do I apply forces? In what direction?
+ - Implement box colliders as a soft check to see if objects are close enough to check collision

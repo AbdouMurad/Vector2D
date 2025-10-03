@@ -9,14 +9,15 @@ int FRAMES = 60;
 
 
 void World::start() {
-    rigidBodies.push_back(std::make_unique<RigidBody>(std::make_unique<Circle>(),Vector2(1,1),Vector2(0,0),Vector2(0,0))); 
-    rigidBodies.push_back(std::make_unique<RigidBody>(std::make_unique<Rectangle>(),Vector2(0,0),Vector2(0,0),Vector2(0,0))); 
+    rigidBodies.push_back(std::make_unique<RigidBody>(std::make_unique<Circle>(),Vector2(0,0),Vector2(0,0),Vector2(0,0))); 
+    //rigidBodies.push_back(std::make_unique<RigidBody>(std::make_unique<Rectangle>(),Vector2(0.09,0.47),Vector2(0,0),Vector2(0,0))); 
+    //rigidBodies[1]->setRotation(48 * PI/180);
 
-
-    //globalAcceleration.push_back(Vector2(0,-9.81)); //gravity
+    rigidBodies[0]->applyForce(Vector2(0,300), 0.1);
+    globalAcceleration.push_back(Vector2(0,-9.81)); //gravity
     //searchLargestDimension();
     //std::cout << largestDimension << std::endl;
-    {
+    {   return;
         Timer timer;
         int col = checkSAT(*rigidBodies[0], *rigidBodies[1]);
         std::cout << "COLLIDING: " << col << std::endl;
@@ -25,9 +26,9 @@ void World::start() {
 
 void World::update() {
     for (int i = 0; i < rigidBodies.size(); ++i) {
-        for (int j = 0; j < globalAcceleration.size(); ++j) rigidBodies[i]->applyForce(globalAcceleration[j] * rigidBodies[i]->getMass());
+        for (int j = 0; j < globalAcceleration.size(); ++j) rigidBodies[i]->addForce(globalAcceleration[j] * rigidBodies[i]->getMass());
         rigidBodies[i]->integrate(dt);
-        //std::cout << *rigidBodies[i] << std::endl;
+        std::cout << *rigidBodies[i] << std::endl;
     }
 }
 void World::searchLargestDimension() {

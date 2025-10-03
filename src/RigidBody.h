@@ -113,8 +113,10 @@ class RigidBody : public Entity {
     void setCollider(std::unique_ptr<Shape> collider);
     void recomputeInertia();
 
-    void applyForce(const Vector2 &force);
+    void addForce(const Vector2 &force);
+    void applyForce(const Vector2 &force, float dt); //add force and integrate into velocity -> need a dt (used to apply initial force)
     void integrate(float dt);
+
 
     bool hasCollider() const;
 

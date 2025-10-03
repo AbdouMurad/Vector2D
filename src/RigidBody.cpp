@@ -171,8 +171,11 @@ void RigidBody::setCollider(std::unique_ptr<Shape> col) {
     collider = std::move(col);
     recomputeInertia();
 }
-void RigidBody::applyForce(const Vector2 &force) {
+void RigidBody::addForce(const Vector2 &force) {
     forces += force;
+}
+void RigidBody::applyForce(const Vector2 &force, float dt) {
+    velocity += force/mass * dt;
 }
 void RigidBody::integrate(float dt) {
     acceleration = forces/mass;

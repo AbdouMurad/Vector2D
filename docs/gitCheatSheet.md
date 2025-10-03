@@ -10,3 +10,8 @@ Push to specific branch:
 
 Switch Branches:
 - git checkout -branchName
+
+Merge onto main:
+- git pull origin main
+- git merge -branchName
+- git push origin main
